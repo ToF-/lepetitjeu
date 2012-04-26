@@ -12,7 +12,7 @@
 
   caseNumber = 20;
 
-  socket = io.connect('http://192.168.2.53:666');
+  socket = io.connect('http://192.168.2.60:666');
 
   socket.on('move', function(data) {
     var currentPlayer, player, playerToMove;
@@ -138,7 +138,7 @@
       paperCase = paper.rect(x * caseWidth, y * caseWidth, caseWidth, caseWidth);
       console.log('case x:' + x + ' y:' + y + 'color: ' + color + 'caseWidth: ' + caseWidth);
       if (color) {
-        return paperCase.attr('fill', '#ddd');
+        return paperCase.attr('fill', '#eee');
       } else {
         return paperCase.attr('fill', '#fff');
       }
