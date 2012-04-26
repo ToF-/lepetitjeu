@@ -4,7 +4,9 @@ paper = {}
 caseWidth = 20
 caseNumber = 20
 
-socket = io.connect('http://192.168.2.53:666')
+## WebSocket section
+
+socket = io.connect('http://192.168.2.60:666')
 socket.on 'move', (data) ->
 	playerToMove =  (player for player in players when player.id is data.id)
 	## le player est inconnu, on l'ajoute
@@ -31,6 +33,8 @@ socket.on 'disconnect', (id) ->
 	playerToErase.drawing.remove() for playerToErase in players.filter( (element) -> (element.id is id));
 	players = players.filter( (element) -> (element.id isnt id))
 
+## Gameplay section	
+	
 key =
 	left: 37
 	up: 38
@@ -44,6 +48,7 @@ Player = (id, color) ->
 	@y = 0
 	@drawing = {}
 	return @
+	
 Player.prototype.initialize = () ->
 	##Creates circle at x = 50, y = 40, with radius 10
 	circle = paper.circle(@x*caseWidth + caseWidth/2, @y*caseWidth + caseWidth/2 , 10)
@@ -76,7 +81,7 @@ preparePlayground = () ->
 		paperCase = paper.rect(x * caseWidth, y * caseWidth, caseWidth, caseWidth)
 		console.log('case x:' + x + ' y:' + y + 'color: '+ color + 'caseWidth: ' + caseWidth)
 		if(color)
-			paperCase.attr('fill','#ddd')
+			paperCase.attr('fill','#eee')
 		else
 			paperCase.attr('fill','#fff')
 
