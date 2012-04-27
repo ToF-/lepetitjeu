@@ -5,8 +5,7 @@ caseWidth = 20
 caseNumber = 20
 
 ## WebSocket section
-
-socket = io.connect('http://192.168.2.60:666')
+socket = io.connect window.location.href
 socket.on 'move', (data) ->
 	playerToMove =  (player for player in players when player.id is data.id)
 	## le player est inconnu, on l'ajoute
