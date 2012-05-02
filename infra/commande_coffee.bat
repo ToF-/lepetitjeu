@@ -1,2 +1,2 @@
-REM compile les fichiers coffee du cote client
-coffee -o server/client/js -cw server/client/coffee
+REM compile les fichiers coffee
+coffee -o js/ -cw coffee/  

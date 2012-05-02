@@ -6,6 +6,7 @@ caseNumber = 20
 
 ## WebSocket section
 socket = io.connect window.location.href
+
 socket.on 'move', (data) ->
 	playerToMove =  (player for player in players when player.id is data.id)
 	## le player est inconnu, on l'ajoute
@@ -15,11 +16,11 @@ socket.on 'move', (data) ->
 		players.push currentPlayer 
 	else
 		currentPlayer = playerToMove[0]
-	currentPlayer.drawing.attr('cx', data.x)
-	currentPlayer.drawing.attr('cy', data.y)
+	currentPlayer.coordinate = new Coordinate(data.coordinate)
+	currentPlayer.updateDrawing()
 
 socket.on 'new', (data) ->
-	playerToAdd = new Player(data.id, data.color)
+	playerToAdd = new Player(data.myPlayer.id, data.myPlayer.color)
 	playerToAdd.initialize() 
 	players.push  playerToAdd
 
@@ -43,42 +44,58 @@ key =
 Player = (id, color) ->
 	@id = id
 	@color = color
-	@x = 0
-	@y = 0
+	@coordinate = new Coordinate({x:0, y:0})
 	@drawing = {}
+
+	@updateDrawing = () ->
+		@drawing.attr('cx', @coordinate.x*caseWidth + caseWidth/2) 
+		@drawing.attr('cy', @coordinate.y*caseWidth + caseWidth/2) 	
+		return @
+
+	@initialize = () ->
+		##Creates circle at x = 50, y = 40, with radius 10
+		circle = paper.circle(@coordinate.x*caseWidth + caseWidth/2, @coordinate.y*caseWidth + caseWidth/2 , 10)
+		## Sets the fill attribute of the circle to red (#f00)
+		circle.attr("fill", @color)
+		@drawing = circle
+
 	return @
 	
-Player.prototype.initialize = () ->
-	##Creates circle at x = 50, y = 40, with radius 10
-	circle = paper.circle(@x*caseWidth + caseWidth/2, @y*caseWidth + caseWidth/2 , 10)
-	## Sets the fill attribute of the circle to red (#f00)
-	circle.attr("fill", @color)
-	@drawing = circle
+Coordinate = (obj) ->
+	@x = obj.x
+	@y = obj.y
+	@areEqual = (coordinate) ->
+		@x is coordinate.x and @y is coordinate.y
+	return @
 
 manageKB = (k)->
+	tempCoordinate = new Coordinate(myPlayer.coordinate)
+
 	switch k.which
-		when key.left then myPlayer.x -= 1
-		when key.up then myPlayer.y -= 1
-		when key.right then myPlayer.x += 1
-		when key.down then  myPlayer.y += 1 
+		when key.left then tempCoordinate.x -= 1
+		when key.up then tempCoordinate.y -= 1
+		when key.right then tempCoordinate.x += 1
+		when key.down then  tempCoordinate.y += 1 
 		else console.log('nop ' + k.which)
 
-	myPlayer.x = 0 if myPlayer.x < 0
-	myPlayer.x = (caseNumber - 1) if myPlayer.x > (caseNumber - 1)
-	myPlayer.y = 0 if myPlayer.y < 0
-	myPlayer.y = (caseNumber - 1) if myPlayer.y > (caseNumber - 1)
+	tempCoordinate.x = 0 if tempCoordinate.x < 0
+	tempCoordinate.x = (caseNumber - 1) if tempCoordinate.x > (caseNumber - 1)
+	tempCoordinate.y = 0 if tempCoordinate.y < 0
+	tempCoordinate.y = (caseNumber - 1) if tempCoordinate.y > (caseNumber - 1)
 
-	myPlayer.drawing.attr('cx', myPlayer.x*caseWidth + caseWidth/2) 
-	myPlayer.drawing.attr('cy', myPlayer.y*caseWidth + caseWidth/2) 	
+	if (players.filter((element)-> element.id isnt myPlayer.id and element.coordinate.areEqual(tempCoordinate))).length is 0
+		myPlayer.coordinate = tempCoordinate
+		myPlayer.updateDrawing()
+	else
+		console.log 'colision'
 	tell()
 
 tell = ()->
-	socket.emit('move', {x: myPlayer.drawing.attr('cx'), y: myPlayer.drawing.attr('cy'), id: myPlayer.id, color: myPlayer.color})
+	socket.emit('move', {coordinate: myPlayer.coordinate, id: myPlayer.id, color: myPlayer.color})
 
 preparePlayground = () ->
 	drawCase = (x, y, color) ->
 		paperCase = paper.rect(x * caseWidth, y * caseWidth, caseWidth, caseWidth)
-		console.log('case x:' + x + ' y:' + y + 'color: '+ color + 'caseWidth: ' + caseWidth)
 		if(color)
 			paperCase.attr('fill','#eee')
 		else
