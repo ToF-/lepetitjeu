@@ -1,11 +1,11 @@
 myPlayer = {}
 players = []
 paper = {}
-caseWidth = 20
-caseNumber = 20
+caseWidth = 30
+caseNumber = 21
 
 ## WebSocket section
-socket = io.connect window.location.href
+socket = io.connect(window.location.href)
 
 socket.on 'move', (data) ->
 	playerToMove =  (player for player in players when player.id is data.id)
@@ -20,12 +20,15 @@ socket.on 'move', (data) ->
 	currentPlayer.updateDrawing()
 
 socket.on 'new', (data) ->
-	playerToAdd = new Player(data.myPlayer.id, data.myPlayer.color)
+	console.log("new")
+	playerToAdd = new Player(data.id, data.color)
 	playerToAdd.initialize() 
-	players.push  playerToAdd
+	players.push(playerToAdd)
 
 socket.on 'myPlayer', (data) ->
-	myPlayer = new Player(data.id, data.color)
+	console.log("myPlayer")
+	myPlayer = new Player(data.myPlayer.id, data.myPlayer.color)
+	preparePlayground(data.map)
 	myPlayer.initialize()
 	players.push myPlayer
 
@@ -54,9 +57,10 @@ Player = (id, color) ->
 
 	@initialize = () ->
 		##Creates circle at x = 50, y = 40, with radius 10
-		circle = paper.circle(@coordinate.x*caseWidth + caseWidth/2, @coordinate.y*caseWidth + caseWidth/2 , 10)
+		circle = paper.circle(@coordinate.x*caseWidth + caseWidth/2, @coordinate.y*caseWidth + caseWidth/2 , caseWidth/2-2)
 		## Sets the fill attribute of the circle to red (#f00)
 		circle.attr("fill", @color)
+		circle.attr("stroke", "#333")
 		@drawing = circle
 
 	return @
@@ -93,24 +97,29 @@ manageKB = (k)->
 tell = ()->
 	socket.emit('move', {coordinate: myPlayer.coordinate, id: myPlayer.id, color: myPlayer.color})
 
-preparePlayground = () ->
+preparePlayground = (map) ->
 	drawCase = (x, y, color) ->
 		paperCase = paper.rect(x * caseWidth, y * caseWidth, caseWidth, caseWidth)
 		if(color)
-			paperCase.attr('fill','#eee')
+			paperCase.attr('fill','#888')
 		else
-			paperCase.attr('fill','#fff')
+			paperCase.attr('fill','#eee')
+		paperCase.attr("stroke", "#fff")
 
-	color = false
-	for y in [0...caseNumber ] by 1
-		for x in [0...caseNumber] by 1
-			drawCase x, y, color
-			color = not color
-		color = not color
+	console.log("start")
+	y=0
+	for row in map by 1
+		x=0
+		for item in row by 1			
+			color = if item == 1 then true else false
+			console.log(x, y, color)
+			drawCase(x, y, color)
+			x++
+		y++
+	
 
 $ ->
 	## Creates canvas 300 × 300 at 10, 50
 	paper = Raphael(10, 50, caseWidth * caseNumber, caseWidth * caseNumber)
-	preparePlayground()
 	socket.emit 'new'
 	$(document).keydown(manageKB)
