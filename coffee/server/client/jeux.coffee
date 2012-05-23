@@ -3,6 +3,7 @@ players = []
 paper = {}
 caseWidth = 30
 caseNumber = 21
+map = {}
 
 ## WebSocket section
 socket = io.connect(window.location.href)
@@ -29,8 +30,13 @@ socket.on 'myPlayer', (data) ->
 	console.log("myPlayer")
 	myPlayer = new Player(data.myPlayer.id, data.myPlayer.color)
 	preparePlayground(data.map)
+	map=data.map
 	myPlayer.initialize()
 	players.push myPlayer
+
+socket.on 'bombDroped', (data) ->
+	console.log 'bombDroped'
+	new Bomb(data.coordinate)
 
 socket.on 'disconnect', (id) ->
 	playerToErase.drawing.remove() for playerToErase in players.filter( (element) -> (element.id is id));
@@ -43,6 +49,7 @@ key =
 	up: 38
 	right: 39
 	down: 40
+	space: 32
 
 Player = (id, color) ->
 	@id = id
@@ -75,27 +82,37 @@ Coordinate = (obj) ->
 manageKB = (k)->
 	tempCoordinate = new Coordinate(myPlayer.coordinate)
 
-	switch k.which
-		when key.left then tempCoordinate.x -= 1
-		when key.up then tempCoordinate.y -= 1
-		when key.right then tempCoordinate.x += 1
-		when key.down then  tempCoordinate.y += 1 
-		else console.log('nop ' + k.which)
-
-	tempCoordinate.x = 0 if tempCoordinate.x < 0
-	tempCoordinate.x = (caseNumber - 1) if tempCoordinate.x > (caseNumber - 1)
-	tempCoordinate.y = 0 if tempCoordinate.y < 0
-	tempCoordinate.y = (caseNumber - 1) if tempCoordinate.y > (caseNumber - 1)
-
-	if (players.filter((element)-> element.id isnt myPlayer.id and element.coordinate.areEqual(tempCoordinate))).length is 0
-		myPlayer.coordinate = tempCoordinate
-		myPlayer.updateDrawing()
+	if k.which is key.space
+		dropBomb()
 	else
-		console.log 'colision'
-	tell()
+		switch k.which
+			when key.left then tempCoordinate.x -= 1
+			when key.up then tempCoordinate.y -= 1
+			when key.right then tempCoordinate.x += 1
+			when key.down then  tempCoordinate.y += 1 
+			when key.space then dropBomb()
+			else console.log('nop ' + k.which)
+
+		tempCoordinate.x = 0 if tempCoordinate.x < 0
+		tempCoordinate.x = (caseNumber - 1) if tempCoordinate.x > (caseNumber - 1)
+		tempCoordinate.y = 0 if tempCoordinate.y < 0
+		tempCoordinate.y = (caseNumber - 1) if tempCoordinate.y > (caseNumber - 1)
+
+
+		console.log(map[tempCoordinate.x][tempCoordinate.y], tempCoordinate.x, tempCoordinate.y)
+		if (players.filter((element)-> element.id isnt myPlayer.id and element.coordinate.areEqual(tempCoordinate))).length is 0 and map[tempCoordinate.x][tempCoordinate.y] is 0
+			myPlayer.coordinate = tempCoordinate
+			myPlayer.updateDrawing()
+		else
+			console.log 'colision'
+		tell()
 
 tell = ()->
 	socket.emit('move', {coordinate: myPlayer.coordinate, id: myPlayer.id, color: myPlayer.color})
+
+dropBomb = () ->
+	console.log('dropBomb')
+	socket.emit('dropBomb', {coordinate: myPlayer.coordinate})
 
 preparePlayground = (map) ->
 	drawCase = (x, y, color) ->
@@ -116,7 +133,10 @@ preparePlayground = (map) ->
 			drawCase(x, y, color)
 			x++
 		y++
-	
+
+
+Bomb = (coord) ->
+	paper.rect(coord.x * caseWidth, coord.y * caseWidth, caseWidth, caseWidth, 10).attr("fill", "#f00");
 
 $ ->
 	## Creates canvas 300 × 300 at 10, 50

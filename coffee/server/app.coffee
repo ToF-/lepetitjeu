@@ -15,8 +15,8 @@ mapBuilder = () ->
       map[k][m] = 0
       m++
     k++
+  
   i = 1
-
   while i < mapSize
     j = 1
 
@@ -62,6 +62,11 @@ io.sockets.on "connection", (socket) ->
   socket.on "move", (data) ->
     console.log data
     socket.broadcast.emit "move", data
+
+  socket.on "dropBomb", (data) ->
+    console.log data
+    socket.broadcast.emit "bombDroped", data
+    socket.emit "bombDroped", data
 
   socket.on "disconnect", ->
     socket.get 'id', (err, id) ->
