@@ -1,11 +1,21 @@
+class KeyboardManager
 
-key =
-	left: 37
-	up: 38
-	right: 39
-	down: 40
-	space: 32
-
+	key :
+		left: 37
+		up: 38
+		right: 39
+		down: 40
+		space: 32
+		
+	keyPress: (k) ->
+		switch k.which
+			when key.left then tempCoordinate.x -= 1
+			when key.up then tempCoordinate.y -= 1
+			when key.right then tempCoordinate.x += 1
+			when key.down then  tempCoordinate.y += 1 
+			when key.space then dropBomb()
+	
+	
 
 Player = (id, color) ->
 	@id = id
