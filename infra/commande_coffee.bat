@@ -1,4 +1,5 @@
 REM compile les fichiers coffee
 
-coffee -o js/ -cw coffee/  
-coffee --output js/server/client/ --join jeux.js -w coffee/server/client/
+REM coffee -o js/ -cw coffee/  
+REM coffee --output js/server/client/ --join jeux.js -w coffee/server/client/
+coffee --output js/server/client/ -w coffee/server/client/

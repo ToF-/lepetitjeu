@@ -1,6 +1,5 @@
 
-
-###
+/*
 Player = (id, color) ->
 	@id = id
 	@color = color
@@ -87,5 +86,10 @@ preparePlayground = (map) ->
 
 Bomb = (coord) ->
 	paper.rect(coord.x * caseWidth, coord.y * caseWidth, caseWidth, caseWidth, 10).attr("fill", "#f00");
+*/
 
-###
+(function() {
+
+
+
+}).call(this);

@@ -1,6 +1,5 @@
-## WebSocket section
-######socket = io.connect(window.location.href)
-###
+
+/*
 socket.on 'move', (data) ->
 	playerToMove =  (player for player in players when player.id is data.id)
 	## le player est inconnu, on l'ajoute
@@ -33,4 +32,11 @@ socket.on 'bombDroped', (data) ->
 
 socket.on 'disconnect', (id) ->
 	playerToErase.drawing.remove() for playerToErase in players.filter( (element) -> (element.id is id));
-	players = players.filter( (element) -> (element.id isnt id))###
+	players = players.filter( (element) -> (element.id isnt id))
+*/
+
+(function() {
+
+
+
+}).call(this);
