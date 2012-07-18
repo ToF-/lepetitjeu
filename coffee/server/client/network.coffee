@@ -1,5 +1,9 @@
 ## WebSocket section
-######socket = io.connect(window.location.href)
+socket = io.connect(window.location.host)
+
+socket.on 'new', (data) ->
+	console.log(data)
+
 ###
 socket.on 'move', (data) ->
 	playerToMove =  (player for player in players when player.id is data.id)
@@ -12,12 +16,6 @@ socket.on 'move', (data) ->
 		currentPlayer = playerToMove[0]
 	currentPlayer.coordinate = new Coordinate(data.coordinate)
 	currentPlayer.updateDrawing()
-
-socket.on 'new', (data) ->
-	console.log("new")
-	playerToAdd = new Player(data.id, data.color)
-	playerToAdd.initialize() 
-	players.push(playerToAdd)
 
 socket.on 'myPlayer', (data) ->
 	console.log("myPlayer")

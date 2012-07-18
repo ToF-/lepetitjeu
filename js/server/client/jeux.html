@@ -9,6 +9,7 @@
      <script src="joueur.js"></script>
      <script src="keyboardManager.js"></script>
      <script src="plateau.js"></script>
+     <script src="network.js"></script>
      <script>
 
         var display = function(message){
@@ -16,6 +17,8 @@
         };
 
 		$(function(){
+            console.log("document ready!");
+
             canalJoueur = "joueur";
             canalAffichage = "display";
             mediator = new Mediator();

@@ -1,7 +1,6 @@
 express = require("express")
 app = express.createServer()
-io = require("socket.io").listen(app)
-
+###
 mapBuilder = () ->
   map = []
   k = 0
@@ -28,7 +27,7 @@ mapBuilder = () ->
   console.log("ends mapBuilder")  
   return map
 
-map = mapBuilder()
+map = mapBuilder()###
 
 app.configure ->
   app.use express.static(__dirname + "/client")
@@ -40,34 +39,24 @@ app.configure ->
 app.get "/", (req, res) ->
   res.sendfile __dirname + "/client/jeux.html"
 
+### page de test a virer plus tard ###
+app.get "/testNetwork", (req, res) ->
+  res.sendfile __dirname + "/client/network.html"
+
 app.listen 666
+io = require("socket.io").listen(app)
+console.log "socket.io is listening on http://127.0.0.1:666/"
 
 id = 0
 
 io.sockets.on "connection", (socket) ->
-  
-  socket.on "new", ->
-    console.log "new"
-    id++ 
-    ip = socket.handshake.address.address
-    console.log('voici l ip ' + ip)
-    f = parseFloat("0." + ip.split('.').reverse().join(''))
-    color = '#'+Math.floor(f*16777215).toString(16)
-    newPlayer = {id: id, color: color}
-    myPlayerContext = {myPlayer: newPlayer, map: map}
-    socket.set 'id',id, -> 
-      socket.emit "myPlayer", myPlayerContext
-      socket.broadcast.emit "new", newPlayer
+  console.log "new"
 
-  socket.on "move", (data) ->
-    console.log data
-    socket.broadcast.emit "move", data
-
-  socket.on "dropBomb", (data) ->
-    console.log data
-    socket.broadcast.emit "bombDroped", data
-    socket.emit "bombDroped", data
+  id++ 
+  ip = socket.handshake.address.address
+  socket.emit "new", {ip: ip}
 
   socket.on "disconnect", ->
+    console.log "disconnect"
     socket.get 'id', (err, id) ->
       socket.broadcast.emit "disconnect", id

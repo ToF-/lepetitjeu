@@ -38,10 +38,7 @@
           break;
         case LPJ.Actions.bombe:
       }
-      if (this.controlePosition(positionTemp)) {
-        this.position = positionTemp;
-        return this.publieLaPosition();
-      }
+      return this.controlePosition(positionTemp);
     };
 
     Joueur.prototype.publieLaPosition = function() {
