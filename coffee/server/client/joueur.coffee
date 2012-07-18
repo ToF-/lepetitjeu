@@ -14,9 +14,7 @@ class @Joueur
 			when LPJ.Actions.bas then positionTemp.x += 1
 			when LPJ.Actions.bombe then
 
-		if @controlePosition(positionTemp)
-			@position = positionTemp
-			@publieLaPosition()
+		@controlePosition positionTemp
 
 	publieLaPosition : () => 
 		@mediator.Publish @displayChannel, @position

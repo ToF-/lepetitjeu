@@ -25,13 +25,25 @@ describe("un joueur", function() {
   		verifiePositionInitiale([10,2]);
 	});
 
-	it("se deplace dans la bonne direction lorsqu il recoit un mouvement", function() {
-		joueur = new Joueur(mediator, canalJoueur, canalAffichage, new Position ({x: 10, y: 5}), function(){return true;});
+	it("emmet le bon mouvement lorsqu il recoit une action", function() {
+
+		var messageEnvoye;
+		var ecoutePlateau = function(message) {messageEnvoye = message;};
+
+		joueur = new Joueur(mediator, canalJoueur, canalAffichage, new Position ({x: 10, y: 5}), ecoutePlateau);
 		
-		verifieDeplacement(LPJ.Actions.haut, [9, 5]);
-		verifieDeplacement(LPJ.Actions.bas, [10, 5]);
-		verifieDeplacement(LPJ.Actions.gauche, [10, 4]);
-		verifieDeplacement(LPJ.Actions.droit, [10, 5]);
+  		mediator.Publish(canalJoueur, LPJ.Actions.haut)
+		position = new Position({x: 9, y: 5});
+  		expect(messageEnvoye.isEqual(position)).toBe(true);
+
+  		mediator.Publish(canalJoueur, LPJ.Actions.bas)
+		position = new Position({x: 11, y: 5});
+  		expect(messageEnvoye.isEqual(position)).toBe(true);
+
+		// verifieDeplacement(LPJ.Actions.haut, [9, 5]);
+		// verifieDeplacement(LPJ.Actions.bas, [10, 5]);
+		// verifieDeplacement(LPJ.Actions.gauche, [10, 4]);
+		// verifieDeplacement(LPJ.Actions.droit, [10, 5]);
 	});
 
 	it("ne se deplace pas lorsque son deplacement est interdit, ", function(){
