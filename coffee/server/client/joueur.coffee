@@ -18,3 +18,6 @@ class @Joueur
 
 	publieLaPosition : () => 
 		@mediator.Publish @displayChannel, @position
+
+	actualisePosition: (position) =>
+		@position = position
