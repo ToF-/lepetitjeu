@@ -22,15 +22,15 @@
     KeyboardManager.prototype.keyPress = function(k) {
       switch (k.which) {
         case this.touche.gauche:
-          return this.publie(LPJ.Mouvements.gauche);
+          return this.publie(LPJ.Actions.gauche);
         case this.touche.haut:
-          return this.publie(LPJ.Mouvements.haut);
+          return this.publie(LPJ.Actions.haut);
         case this.touche.droit:
-          return this.publie(LPJ.Mouvements.droit);
+          return this.publie(LPJ.Actions.droit);
         case this.touche.bas:
-          return this.publie(LPJ.Mouvements.bas);
+          return this.publie(LPJ.Actions.bas);
         case this.touche.espace:
-          return this.publie(LPJ.Mouvements.bombe);
+          return this.publie(LPJ.Actions.bombe);
       }
     };
 

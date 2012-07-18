@@ -2,7 +2,7 @@
 
   this.LPJ = typeof LPJ !== "undefined" && LPJ !== null ? LPJ : {};
 
-  LPJ.Mouvements = {
+  LPJ.Actions = {
     gauche: "gauche",
     haut: "haut",
     droit: "droit",

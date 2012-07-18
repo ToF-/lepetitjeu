@@ -3,19 +3,23 @@
 
   this.Plateau = (function() {
 
-    function Plateau(dimension) {
+    function Plateau(dimension, mediator, canalComm) {
       this.dimension = dimension;
+      this.mediator = mediator;
+      this.canalComm = canalComm;
+      this.retiensLaPositionDesJoueurs = __bind(this.retiensLaPositionDesJoueurs, this);
       this.laCaseEstDansLePlateau = __bind(this.laCaseEstDansLePlateau, this);
-      this.laCaseEstLibre = __bind(this.laCaseEstLibre, this);
+      this.laCaseEstInocupee = __bind(this.laCaseEstInocupee, this);
       this.laCaseEstDisponible = __bind(this.laCaseEstDisponible, this);
       this.positionOccupees = [];
+      this.mediator.Subscribe(this.canalComm, this.retiensLaPositionDesJoueurs);
     }
 
     Plateau.prototype.laCaseEstDisponible = function(position) {
-      return this.laCaseEstDansLePlateau(position) && this.laCaseEstLibre(position);
+      return this.laCaseEstDansLePlateau(position) && this.laCaseEstInocupee(position);
     };
 
-    Plateau.prototype.laCaseEstLibre = function(position) {
+    Plateau.prototype.laCaseEstInocupee = function(position) {
       return !(this.positionOccupees.some(function(occupee) {
         return occupee.isEqual(position);
       }));
@@ -23,6 +27,10 @@
 
     Plateau.prototype.laCaseEstDansLePlateau = function(position) {
       return !(position.x < 0 || position.y < 0 || position.x >= this.dimension || position.y >= this.dimension);
+    };
+
+    Plateau.prototype.retiensLaPositionDesJoueurs = function(position) {
+      return this.positionOccupees.push(position);
     };
 
     return Plateau;

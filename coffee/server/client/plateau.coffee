@@ -1,12 +1,16 @@
 class @Plateau
-	constructor: (@dimension) ->
+	constructor: (@dimension, @mediator, @canalComm) ->
 		@positionOccupees = []
+		@mediator.Subscribe @canalComm, @retiensLaPositionDesJoueurs
 
 	laCaseEstDisponible: (position) =>
-		 @laCaseEstDansLePlateau(position) and @laCaseEstLibre(position)
+		 @laCaseEstDansLePlateau(position) and @laCaseEstInocupee(position)
 
-	laCaseEstLibre: (position) =>
+	laCaseEstInocupee: (position) =>
 		!(@positionOccupees.some (occupee) -> occupee.isEqual(position))
 
 	laCaseEstDansLePlateau: (position) =>
 		!(position.x < 0 or position.y < 0 or position.x >= @dimension or position.y >= @dimension)
+
+	retiensLaPositionDesJoueurs: (position) =>
+		@positionOccupees.push(position)

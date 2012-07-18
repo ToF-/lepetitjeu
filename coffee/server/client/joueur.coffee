@@ -2,17 +2,17 @@ class @Joueur
 
 	constructor: (@mediator, @playerChannel, @displayChannel, @position, @controlePosition) ->
 		@mediator.Publish @displayChannel, @position
-		@mediator.Subscribe @playerChannel, @gereLesMouvements
+		@mediator.Subscribe @playerChannel, @gererLesActions
 
-	gereLesMouvements : (mouvement) =>
+	gererLesActions : (mouvement) =>
 		positionTemp = new Position(@position)
 
 		switch mouvement
-			when LPJ.Mouvements.gauche then positionTemp.y -= 1
-			when LPJ.Mouvements.haut then positionTemp.x -= 1
-			when LPJ.Mouvements.droit then positionTemp.y += 1
-			when LPJ.Mouvements.bas then positionTemp.x += 1
-			when LPJ.Mouvements.bombe then
+			when LPJ.Actions.gauche then positionTemp.y -= 1
+			when LPJ.Actions.haut then positionTemp.x -= 1
+			when LPJ.Actions.droit then positionTemp.y += 1
+			when LPJ.Actions.bas then positionTemp.x += 1
+			when LPJ.Actions.bombe then
 
 		if @controlePosition(positionTemp)
 			@position = positionTemp

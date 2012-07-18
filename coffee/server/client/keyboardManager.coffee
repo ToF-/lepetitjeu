@@ -12,11 +12,11 @@ class @KeyboardManager
 
 	keyPress: (k) =>
 		switch k.which
-			when @touche.gauche then @publie LPJ.Mouvements.gauche
-			when @touche.haut then @publie LPJ.Mouvements.haut
-			when @touche.droit then @publie LPJ.Mouvements.droit
-			when @touche.bas then  @publie LPJ.Mouvements.bas
-			when @touche.espace then @publie LPJ.Mouvements.bombe
+			when @touche.gauche then @publie LPJ.Actions.gauche
+			when @touche.haut then @publie LPJ.Actions.haut
+			when @touche.droit then @publie LPJ.Actions.droit
+			when @touche.bas then  @publie LPJ.Actions.bas
+			when @touche.espace then @publie LPJ.Actions.bombe
 
 	publie : (message) =>
 		@mediator.Publish @outputChannel, message

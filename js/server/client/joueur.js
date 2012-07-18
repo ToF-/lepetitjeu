@@ -10,28 +10,28 @@
       this.position = position;
       this.controlePosition = controlePosition;
       this.publieLaPosition = __bind(this.publieLaPosition, this);
-      this.gereLesMouvements = __bind(this.gereLesMouvements, this);
+      this.gererLesActions = __bind(this.gererLesActions, this);
       this.mediator.Publish(this.displayChannel, this.position);
-      this.mediator.Subscribe(this.playerChannel, this.gereLesMouvements);
+      this.mediator.Subscribe(this.playerChannel, this.gererLesActions);
     }
 
-    Joueur.prototype.gereLesMouvements = function(mouvement) {
+    Joueur.prototype.gererLesActions = function(mouvement) {
       var positionTemp;
       positionTemp = new Position(this.position);
       switch (mouvement) {
-        case LPJ.Mouvements.gauche:
+        case LPJ.Actions.gauche:
           positionTemp.y -= 1;
           break;
-        case LPJ.Mouvements.haut:
+        case LPJ.Actions.haut:
           positionTemp.x -= 1;
           break;
-        case LPJ.Mouvements.droit:
+        case LPJ.Actions.droit:
           positionTemp.y += 1;
           break;
-        case LPJ.Mouvements.bas:
+        case LPJ.Actions.bas:
           positionTemp.x += 1;
           break;
-        case LPJ.Mouvements.bombe:
+        case LPJ.Actions.bombe:
       }
       if (this.controlePosition(positionTemp)) {
         this.position = positionTemp;
