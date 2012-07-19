@@ -9,26 +9,16 @@
      <script src="joueur.js"></script>
      <script src="keyboardManager.js"></script>
      <script src="plateau.js"></script>
+     <script src="LePetitJeu.js"></script>
      <script>
 
-        var display = function(message){
-            console.log(message);
-        };
-
 		$(function(){
-            canalJoueur = "joueur";
-            canalAffichage = "display";
-            mediator = new Mediator();
-            mediator.Subscribe(canalAffichage, display);
-
-			plateau = new Plateau(4);
-			joueur = new Joueur(mediator, canalJoueur, canalAffichage, new Position ({x: 0, y: 0}), plateau.laCaseEstDisponible);
-            keyboardManager = new KeyboardManager(document, mediator, canalJoueur);
+            var petitJeu = new LePetitJeu();
+            petitJeu.go();
 		});
 	 
 	 </script>
      </head>  
      <body>  
-       <canvas id="canvas" width="500px" height="500px"></canvas>  
      </body>  
     </html>  

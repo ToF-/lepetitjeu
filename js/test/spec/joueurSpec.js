@@ -1,41 +1,33 @@
 describe("un joueur", function() {
-	var mediator, joueur, canalJoueur, canalAffichage, message, controleDePosition;
+	var joueur, message, sauvgardeMessage;
 
 	beforeEach(function() {
-		canalJoueur = "joueur";
-		canalAffichage = "display";
-		mediator = new Mediator();
-		mediator.Subscribe(canalAffichage, function(data){ message = data });
-		controleDePosition = function(messageEnvoye) {message = messageEnvoye;};
-  	});
+		sauvgardeMessage = function(messageEnvoye) {message = messageEnvoye;};
+	});
 
-  	var construitPosition = function (coordonnees){
-  		return new Position({x: coordonnees[0], y: coordonnees[1]});
-  	}
+	var verifiePosition = function(expectPosition, actualPosition){
+	expect(expectPosition.isEqual(actualPosition)).toBe(true);
+	}
 
-  	var verifiePosition = function(expectPosition, actualPosition){
-		expect(expectPosition.isEqual(actualPosition)).toBe(true);
-  	}
-
-  	var verifiePositionInitiale = function(coordonnees){
-  		var position = construitPosition(coordonnees);
-  		joueur = new Joueur(mediator, canalJoueur, canalAffichage, position);
+	var verifiePositionInitiale = function(coordonnees){
+		var position = new Position(coordonnees);
+		joueur = new Joueur(sauvgardeMessage, position, sauvgardeMessage);
 		expect(message.isEqual(position)).toBe(true);
-  	}
+	}
 
 	var verifieLeMessage = function(mouvement, coordonnees){
-		mediator.Publish(canalJoueur, mouvement)
-		var position = construitPosition(coordonnees);
-  		expect(message.isEqual(position)).toBe(true);
-  	}
+		joueur.gererLesActions(mouvement)
+    var position = new Position(coordonnees);
+		expect(message.isEqual(position)).toBe(true);
+	}
 
-  	it("emet sa position lorsqu il s initialise", function() {
+	it("emet sa position lorsqu il s initialise", function() {
   		verifiePositionInitiale([0,0]);
   		verifiePositionInitiale([10,2]);
 	});
 
-	it("emet le bon mouvement lorsqu il recoit une action", function() {
-		joueur = new Joueur(mediator, canalJoueur, canalAffichage, new Position ({x: 10, y: 5}), controleDePosition);
+	it("transmet le bon mouvement lorsqu il recoit une action", function() {
+		joueur = new Joueur( function(){} , new Position ({x: 10, y: 5}), sauvgardeMessage);
 		
   		verifieLeMessage(LPJ.Actions.haut, [9, 5]);
   		verifieLeMessage(LPJ.Actions.bas, [11, 5]);
@@ -44,9 +36,15 @@ describe("un joueur", function() {
 	});
 
 	it("actualise sa position lorsqu il en recoit une nouvelle", function() {
-		joueur = new Joueur(mediator, canalJoueur, canalAffichage, new Position ({x: 10, y: 5}), controleDePosition);
-		joueur.actualisePosition(construitPosition([0,0]));
-		verifiePosition(construitPosition([0,0]), joueur.position);
+		joueur = new Joueur(sauvgardeMessage, new Position ({x: 10, y: 5}), function(){});
+		joueur.actualisePosition(new Position([0,0]));
+		verifiePosition(new Position([0,0]), joueur.position);
 	});
+
+  it("affiche sa position lorsqu il en recoit une nouvelle", function() {
+    joueur = new Joueur(sauvgardeMessage, new Position ({x: 10, y: 5}), function(){});
+    joueur.actualisePosition(new Position([12,16]));
+    expect(message.isEqual(new Position([12,16]))).toBe(true);
+  });
 
 });

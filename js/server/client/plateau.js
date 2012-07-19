@@ -3,16 +3,13 @@
 
   this.Plateau = (function() {
 
-    function Plateau(dimension, mediator, canalComm) {
+    function Plateau(dimension) {
       this.dimension = dimension;
-      this.mediator = mediator;
-      this.canalComm = canalComm;
       this.retiensLaPositionDesJoueurs = __bind(this.retiensLaPositionDesJoueurs, this);
       this.laCaseEstDansLePlateau = __bind(this.laCaseEstDansLePlateau, this);
       this.laCaseEstInocupee = __bind(this.laCaseEstInocupee, this);
       this.laCaseEstDisponible = __bind(this.laCaseEstDisponible, this);
       this.positionOccupees = [];
-      this.mediator.Subscribe(this.canalComm, this.retiensLaPositionDesJoueurs);
     }
 
     Plateau.prototype.laCaseEstDisponible = function(position) {
