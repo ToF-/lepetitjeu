@@ -28,8 +28,8 @@ describe("un joueur", function() {
 	});
 
 	it("transmet le bon mouvement lorsqu il recoit une action", function() {
-		joueur = new Joueur( function(){} , new Position ({x: 10, y: 5}), sauvgardeMessage);
-		joueur = new Joueur( function(){} , new Position ([10, 5]}), sauvgardeMessage);
+		joueur = new Joueur( function(){} , new Position ([10, 5]), sauvgardeMessage);
+		joueur = new Joueur( function(){} , new Position ([10, 5]), sauvgardeMessage);
 		
   		verifieLeMessage(LPJ.Actions.haut, [9, 5]);
   		verifieLeMessage(LPJ.Actions.bas, [11, 5]);
