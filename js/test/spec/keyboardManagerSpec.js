@@ -1,5 +1,5 @@
 describe("le keyboard manager", function() {
-	var keyboardManager, mediator, keyboardChannel;
+	var keyboardManager, sauvegardeMessage, messages;
 
 	var enfonceLaTouche = function(numeroDeLaTouche){
 		var e = jQuery.Event("keydown");
@@ -8,27 +8,24 @@ describe("le keyboard manager", function() {
 	}
 
 	var verifieLeMessageEmis = function(message, direction){
-		enfonceLaTouche(keyboardManager.touche[direction]);
+		enfonceLaTouche(KeyboardManager.touche[direction]);
 		expect(message[message.length - 1]).toBe(LPJ.Actions[direction]);
 	}
 
 	beforeEach(function() {
-		keyboardChannel = "keyChannel"
-		mediator = new Mediator();
-		keyboardManager = new KeyboardManager(document, mediator, keyboardChannel);
+		messages = [];
+		sauvegardeMessage = function(data){ messages.push(data); };
+		keyboardManager = new KeyboardManager(document, sauvegardeMessage);
   	});
 
   	it("emet le signal correspondant a la touche appuyee", function() {
-  		var message = [];
-		mediator.Subscribe(keyboardChannel, function(data){ message.push(data) });
+		verifieLeMessageEmis(messages, "haut");
+		verifieLeMessageEmis(messages, "bas");
+		verifieLeMessageEmis(messages, "gauche");
+		verifieLeMessageEmis(messages, "droit");
 		
-		verifieLeMessageEmis(message, "haut");
-		verifieLeMessageEmis(message, "bas");
-		verifieLeMessageEmis(message, "gauche");
-		verifieLeMessageEmis(message, "droit");
-		
-		enfonceLaTouche(keyboardManager.touche.espace);
-		expect(message[message.length - 1]).toBe(LPJ.Actions.bombe);	
+		enfonceLaTouche(KeyboardManager.touche.espace);
+		expect(messages[messages.length - 1]).toBe(LPJ.Actions.bombe);	
 	});
 
 });

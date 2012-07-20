@@ -1,7 +1,6 @@
 class @Plateau
-	constructor: (@dimension, @mediator, @canalComm) ->
+	constructor: (@dimension) ->
 		@positionOccupees = []
-		@mediator.Subscribe @canalComm, @retiensLaPositionDesJoueurs
 
 	laCaseEstDisponible: (position) =>
 		 @laCaseEstDansLePlateau(position) and @laCaseEstInocupee(position)

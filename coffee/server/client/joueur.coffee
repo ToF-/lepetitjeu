@@ -1,8 +1,7 @@
 class @Joueur
 
-	constructor: (@mediator, @playerChannel, @displayChannel, @position, @controlePosition) ->
-		@mediator.Publish @displayChannel, @position
-		@mediator.Subscribe @playerChannel, @gererLesActions
+	constructor: (@affiche, @position, @controlePosition) ->
+		@affiche @position
 
 	gererLesActions : (mouvement) =>
 		positionTemp = new Position(@position)
@@ -16,8 +15,6 @@ class @Joueur
 
 		@controlePosition positionTemp
 
-	publieLaPosition : () => 
-		@mediator.Publish @displayChannel, @position
-
 	actualisePosition: (position) =>
 		@position = position
+		@affiche @position

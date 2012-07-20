@@ -1,45 +1,35 @@
 describe("un plateau", function() {
 
-  var plateau, mediator, canalComm;
+  var plateau;
 
-  beforeEach(function() {
-    mediator = new Mediator();
-    canalComm = "canal";
-  });
-
-  var verifieQueLaCaSeEstIndisponible = function(x,y) {
-      var position = new Position(x, y)
+  var verifieQueLaCaSeEstIndisponible = function(coordonnees) {
+      var position = new Position(coordonnees)
       expect(plateau.laCaseEstDisponible(position)).toBe(false);
-  }
-
-  var constuitLePlateau = function(tailleDuPlateau){
-    return plateau = new Plateau(tailleDuPlateau, mediator, canalComm);
   }
 
   describe("de 1*1", function() {
 
     beforeEach(function() {
-      plateau = constuitLePlateau(1);
+      plateau = new Plateau(1);
     });
 
-  
     it("a sa case disponible lorsqu elle n est pas occupee", function() {
-      var position = new Position({x: 0, y: 0})
+      var position = new Position([0,0])
       expect(plateau.laCaseEstDisponible(position)).toBe(true);
     });
 
     it("a sa case non disponible lorsqu elle est occupee", function() {
-      var position = new Position({x: 0, y: 0})
-      var position2 = new Position({x: 0, y: 0})
+      var position = new Position([0, 0])
+      var position2 = new Position([0, 0])
       plateau.positionOccupees.push(position);
       expect(plateau.laCaseEstDisponible(position2)).toBe(false);
     });
 
-  it("n a pas d autre case disponible que celle en 0,0", function() {
-    verifieQueLaCaSeEstIndisponible({x: 1,y: 0});
-    verifieQueLaCaSeEstIndisponible({x: 0,y: 1});
-    verifieQueLaCaSeEstIndisponible({x: -1,y: 0});
-    verifieQueLaCaSeEstIndisponible({x: 0,y: -1});
+    it("n a pas d autre case disponible que celle en 0,0", function() {
+      verifieQueLaCaSeEstIndisponible([1,0]);
+      verifieQueLaCaSeEstIndisponible([0,1]);
+      verifieQueLaCaSeEstIndisponible([-1,0]);
+      verifieQueLaCaSeEstIndisponible([0,-1]);
     });
 
   });
@@ -47,13 +37,12 @@ describe("un plateau", function() {
   describe("un plateau de 2*2", function() {
 
     beforeEach(function() {
-        constuitLePlateau(2);
+        plateau = new Plateau(2);
       });
 
-
     it("retient les positions des joueurs", function() {
-        mediator.Publish(canalComm, new Position({x: 0, y: 0}));
-        verifieQueLaCaSeEstIndisponible({x: 0,y: 0});
+        plateau.retiensLaPositionDesJoueurs(new Position([0,0]));
+        verifieQueLaCaSeEstIndisponible([0,0]);
     });
   
 
