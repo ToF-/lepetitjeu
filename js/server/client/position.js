@@ -14,7 +14,11 @@
     }
 
     Position.prototype.isEqual = function(position) {
-      return this.x === position.x && this.y === position.y;
+      if (position instanceof Array) {
+        return this.x === position[0] && this.y === position[1];
+      } else {
+        return this.x === position.x && this.y === position.y;
+      }
     };
 
     return Position;

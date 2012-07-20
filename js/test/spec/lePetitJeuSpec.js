@@ -14,6 +14,7 @@ describe("le petit jeu", function() {
 
   var monJoueurEstLa = function(coordonnees){
     expect(petitJeu.monJoueur.position.isEqual(new Position(coordonnees))).toBe(true)
+    expect(petitJeu.monJoueur.position.isEqual(coordonnees)).toBe(true)
   }
 
   it("place mon joueur sur la case 0,0 lorsqu il s initialise", function() {
@@ -36,6 +37,7 @@ describe("le petit jeu", function() {
     spyOn(petitJeu, 'affichage');    
     petitJeu.go();
     expect(petitJeu.affichage.mostRecentCall.args[0].isEqual(new Position([0,0]))).toBe(true);
+    expect(petitJeu.affichage.mostRecentCall.args[0].isEqual([0,0])).toBe(true);
   });
 
 });
